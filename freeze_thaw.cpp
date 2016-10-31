@@ -51,8 +51,9 @@ void correct(double dt);
 int particles;						//The number of particles in the system
 int tag;							//Used to select the force law
 int output;							//Used to dump the phase properties
-Vector G;
-vector<disk> particle;//The Gravity vector
+
+Vector G;							//The Gravity vector
+vector<disk> particle;				//The vector that holds all particle objects
 double Z = 0.0;						//The System Coordination number
 double potential_sum = 0.0;			//The sum of the system potential energy
 double kinetic_sum = 0.0;			//The sum of the system kinetic energy
@@ -61,7 +62,8 @@ double angular_momentum_sum = 0.0;	//The sum of the system angular momentum
 //Verlet variables
 vector<set<int> > verlet;			//The Verlet List
 vector<vector<vector<int> > > celllist;//The Grid List
-vector<disk> safe;
+vector<disk> safe;					//Backup of the vector that holds all particle objects
+
 double verlet_distance = 0.00005;
 double verlet_ratio = 0.6;
 double verlet_grid = 0.05;
@@ -76,17 +78,19 @@ double Timesafe;
 
 int main(int argc, char* argv[])//Main program
 {	
+
+	//Init variables
 	double dt,tmax, totalSteps;		//The timestep and the max time
 	time_t start, end;	//Timer variables
 	double diff;		//The difference in time
 	int j;			//Counters for loops
 	int counter = 0;	//Print out counter
 
-
+    //Open files for input/output
 	ofstream out1 ("Output/run1.out");	//File writer object, writes phase information at predetermined timesteps
 	ofstream out2 ("Input/run2.in");	//File writer object, writes the final phase information at the end
 	//ifstream in ("input.dat");//File reader object
-	ifstream in ("Input/window_box.in");//File reader object, change this to run any tests
+	ifstream in ("Input/hopper.in");//File reader object, change this to run any tests
     #ifdef DEBUG
 	    //Testing output file, this is for any information
 	    ofstream vel ("Output/vel2.out");
@@ -129,7 +133,7 @@ int main(int argc, char* argv[])//Main program
 	in >> G.y();
 	in >> G.phi();
 
-	output = 100000;
+	output = 10000;
 
 	//Print Pre-processing details to the screen
     totalSteps = tmax/dt;
@@ -176,6 +180,9 @@ int main(int argc, char* argv[])//Main program
 		in >> particle[i].A();
 		particle[i].J() = 0.0000000001;
 	}
+
+	//Close the input files
+	in.close();
 	make_verlet();
 
 	kinetic_sum=total_kinetic_energy();
@@ -366,8 +373,6 @@ int main(int argc, char* argv[])//Main program
 	//print it to the output file
 	//out << "The system density is: " << rho << "\n";
 
-	//Close the input and output files
-	in.close();
 	out1.close();
 	out2.close();
     #ifdef DEBUG
@@ -383,15 +388,20 @@ int main(int argc, char* argv[])//Main program
 
 //--------------------------------------------Functions-----------------------------------------
 void dump_grain_to_console(int i, disk p){
-	cout << i << "\t" <<
+	cout << i << ", " <<
 			p.x() <<
-			"\t" << p.y() <<
-			"\t" << p.phi() <<
-			"\t" << p.vx() <<
-			"\t" << p.vy() <<
-			"\t" << p.omega() <<
-            "\t" << p.type() <<
-			"\t" << p.A() << "\n\n\n";
+			", " << p.y() <<
+			", " << p.phi() <<
+			", " << p.vx() <<
+			", " << p.vy() <<
+			", " << p.omega() <<
+			", " << p.m() <<
+			", " << p.r() <<
+			", " << p.type() <<
+			", " << p.mu() <<
+			", " << p.gamma() <<
+			", " << p.Y() <<
+			", " << p.A() << "\n";
 }
 
 void dump_grain_to_file(ostream & os, int i, disk p){
@@ -512,13 +522,8 @@ void disk::correct(double dt){
 			const double coeff1 = double(3)/double(4)*(dt/double(2));
 			const double coeff3 = double(1)/double(2)*(double(3)*dt_recip);
 			const double coeff4 = double(1)/double(12)*(double(12)*(dt_recip*dt_recip));
-			//cout <<"_J: " << _J << "\n";
-			//cout << "1/_J: " << double(1.0/double(_J)) << "\n";
-			//cout <<"_force.phi(): " <<_force.phi() << "\n";
 
 			accel=Vector((((1/_m)*_force.x())+G.x()),(((1/_m)*_force.y())+G.y()),(((1/_J)*_force.phi())+G.phi()));
-			//cout << accel;
-			//cout << "\n";
 			
 			corr=accel-rtd2;
 
@@ -547,9 +552,8 @@ void force(disk & p1, disk & p2, double lx, double ly, int tag){
 				double A=0.5*(p1._A+p2._A);
 				double mu = (p1._mu<p2._mu ? p1._mu : p2._mu);
 				double gamma = (p1._gamma<p2._gamma ? p1._gamma : p2._gamma);
-				gamma=100.0;
-				double gamma_t = 100.0;
-				double kn = 300000.0;
+				//gamma=100.0;
+				double kn = 3.0;
 				double reff = (r1*r2)/(r1+r2);
 				double meff = (m1*m2)/(m1+m2);
 				double dvx=p1.vx()-p2.vx();
@@ -570,7 +574,7 @@ void force(disk & p1, disk & p2, double lx, double ly, int tag){
 						fx = kn*xi - (gamma*meff*(dvx*ex));		//3rd force law
 						fy = kn*xi - (gamma*meff*(dvy*ex));
 					}
-				double ft=-gamma_t*vtrel;
+				double ft=-gamma*vtrel;
 
 			if(fn<0) fn=0;
 			if(ft<-mu*fn) ft=-mu*fn;
@@ -598,8 +602,8 @@ void force(disk & p1, disk & p2, double lx, double ly, int tag){
 void disk::boundary_conditions(int n, double dt, double t)
 {
   switch(type()){
-  case(0): break;
-  case(1): break;
+  case(0): break; //Free particle
+  case(1): break; //Wall particle
   case(2): {
       x()=0.5-0.4*cos(10*t);
       y()=0.1;
@@ -669,10 +673,15 @@ bool make_verlet(){
     #endif
 	for(unsigned int i = 0; i < particle.size(); i++){
         #ifdef DEBUG
-		    cout << i << " " << particle[i].x() << " " << particle[i].y() << "...\n";
+		    cout << i << " " << particle[i].x() << " " << particle[i].y() << " " << x_0 << " " << y_0 << " " << dx << " " << dy <<"...\n";
         #endif
 		int ix = int((particle[i].x()-x_0)/dx);
 		int iy = int((particle[i].y()-y_0)/dy);
+        #ifdef DEBUG
+		    if (ix < 0 || iy < 0){
+			    cout << "Negative indices detected!!! " << particle[i].type() << " " << "ix: " << ix << ", iy: " << iy << "...\n";
+		    }
+		#endif
         #ifdef DEBUG
 		    cout << ix << "..." << iy << "...\n";
         #endif
@@ -689,6 +698,9 @@ bool make_verlet(){
 		verlet[i].clear();
 		int ix = int((particle[i].x()-x_0)/dx);
 		int iy = int((particle[i].y()-y_0)/dy);
+		if (ix < 0 || iy < 0){
+			cout << "Negative indices detected in make_verlet!!!" << "ix: " << ix << ", iy: " << iy;
+		}
 		for(int iix = ix - 1; iix <= ix + 1; iix++){
 			for(int iiy = iy - 1; iiy <= iy + 1; iiy++){
 				int wx = (iix+vnx)%vnx;
@@ -699,7 +711,6 @@ bool make_verlet(){
 						if(Distance(particle[i],particle[pk],lx,ly) < particle[i].r() + particle[pk].r() + verlet_distance){
 							if((particle[i].type()==0) || (particle[pk].type()==0)){
 								verlet[i].insert(pk);
-
 								if(oldverlet.find(pk)==oldverlet.end()){
 									if(do_touch(i,pk)){
 										ok=false;

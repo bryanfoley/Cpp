@@ -22,15 +22,19 @@ class disk{
 		friend void force(disk & p1, disk & p2, double lx, double ly, int tag);
 		//Calculate the packing density of the system
 		friend double density(disk iArray[], double lx, double ly);
+		//Calculate the average coordination number of the system
 		friend double avg_coordination_number(disk iArray[]);
-		friend double Distance(const disk & p1, const disk & p2, 
-			 double lx, double ly){
+		//Calculate the distance between the centre of two particles
+		friend double Distance(const disk & p1, const disk & p2, double lx, double ly){
 				double dx=normalise(p1.rtd0.x()-p2.rtd0.x(),lx);
 				double dy=normalise(p1.rtd0.y()-p2.rtd0.y(),ly);
 				return sqrt(dx*dx+dy*dy);
 		}
+		//Input data from a file to an object
 		friend istream & operator >> (istream & is, disk & p1);
-		friend ostream & operator >> (ostream & os, const disk & p1);
+		//Output data from an object to a file
+		friend ostream & operator << (ostream & os, const disk & p1);
+		friend ostream & operator << (ostream & os, double val);
 
 	public:
 		//Constructor
@@ -85,10 +89,10 @@ class disk{
 		int z() const {return _z;}
 
 		//Functions that operate on the _force vector of a particle
-		void predict(double dt);
-		void add_force(const Vector & f) {_force+=f;}
-		void correct(double dt);
 		void set_force_to_zero() {_force=null;}
+		void add_force(const Vector & f) {_force+=f;}
+		void predict(double dt);
+		void correct(double dt);
 		void boundary_conditions(int n, double dt, double t);
 
 		//Other functions

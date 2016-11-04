@@ -4,6 +4,8 @@
 //************************************************************************//
 #include "disk.h"
 #include "Vector.h"
+#include "display.h"
+#include <SDL2/SDL.h>
 #include<iostream>
 #include<fstream>
 #include<cstdlib>
@@ -78,6 +80,8 @@ double potential_sum = 0.0;			//The sum of the system potential energy
 double kinetic_sum = 0.0;			//The sum of the system kinetic energy
 double linear_momentum_sum = 0.0;	//The sum of the system linear momentum
 double angular_momentum_sum = 0.0;	//The sum of the system angular momentum
+static const int DISPLAY_WIDTH = 800;
+static const int DISPLAY_HEIGHT = 600;
 
 //************************************************************************//
 //****************************Verlet Variables****************************//
@@ -105,6 +109,8 @@ bool fileout = false;
 
 int main(int argc, char *argv[])//Main program
 {	
+	Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT, "OpenGL");
+	display.Clear(0.0f, 0.0f, 0.0f, 1.0f);
 	system("clear");
 	header();
 	ofstream out1;

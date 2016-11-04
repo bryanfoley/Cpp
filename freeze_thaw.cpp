@@ -18,6 +18,7 @@
 #include<list>
 #include<stdio.h>
 #include<limits>
+#include<GL/glew.h>
 
 //************************************************************************//
 //*********************************Defines********************************//
@@ -34,9 +35,9 @@ void assign_system_properties(istream & in);
 //Assign the system properties from a file
 void assign_particle_properties(istream & in);
 //Dump particle properties to the console
-void dump_grain_to_console(int i, disk p);
+void dump_grain_to_console();
 //Dump particle properties to file
-void dump_grain_to_file(ostream & os, int i, disk p);
+void dump_grain_to_file(ostream & os);
 //Calculate the packing density of the system
 double density();
 //Calculate the Total Kinetic Energy of the System
@@ -56,6 +57,10 @@ bool make_verlet();
 bool do_touch(int i, int k);
 bool verlet_needs_update();
 void resize_cells(vector<disk> &particle, vector<vector<vector<int> > > &celllist);
+void update_verlet_variables();
+double calc_avg_radius();
+void header();
+string get_date(void);
 
 //************************************************************************//
 //****************************System Variables****************************//
@@ -83,10 +88,10 @@ vector<set<int> > verlet;			//The Verlet List
 vector<vector<vector<int> > > celllist;//The Grid List
 vector<disk> safe;					//Backup of the vector that holds all particle objects
 
-double verlet_distance = 0.00005;
-double verlet_ratio = 0.6;
-double verlet_grid = 0.05;
-double verlet_increase = 1.1;
+double verlet_distance;
+double verlet_ratio;
+double verlet_grid;
+double verlet_increase;
 double dx,dy;
 int vnx,vny;
 double lx = 2.0;
@@ -94,19 +99,32 @@ double ly = 2.0;
 double x_0 = 0.0;
 double y_0 = 0.0;
 double Timesafe;
+bool fileout = false;
 
 //************************************************************************//
 //**********************************Main**********************************//
 //************************************************************************//
 
-int main(int argc, char* argv[])//Main program
+int main(int argc, char *argv[])//Main program
 {	
-	//Open files for input/output
-	ofstream out1;					//File writer object, writes phase information at predetermined timesteps
-	out1.open("Output/run1.bin",ios::out | ios::binary);
+	system("clear");
+	header();
+	ofstream out1;
+	if (argc > 1){
+		if (string(argv[1])=="-tf"){
+			string filename = "Output/run_";
+			filename.append(get_date());
+			filename.append(".bin");
+			//Open files for output				//File writer object, writes phase information at predetermined timesteps
+			out1.open(filename.c_str(),ios::out | ios::binary);
+			fileout = true;
+			cout << "Output will also be logged to file \n";
+		}
+	}
 
+	//Open files for input
 	ifstream in;//File reader object, change this to run any tests
-	in.open("Input/hopper.in",ios::in);
+	in.open("Input/grv_test.in",ios::in);
 
 	if(!out1){//If the file is not accessible
 		cerr << "Cannot open the first file to be written to!\n";
@@ -123,20 +141,22 @@ int main(int argc, char* argv[])//Main program
 
 	//Print Pre-processing details to the screen
     totalSteps = tmax/dt;
-	output = int(totalSteps/100);
+	output = int(totalSteps/20);
 	cout << "The Simulation is of " << particles << " particles" << ".\n" 
 		<< "It simulates "<< tmax << " second(s) at a time step of " << dt << ".\n"
 		<< "Using force law " << tag << ".\n"
-	    << "This equates to " << totalSteps << " steps. \n"
-	    << "Every " << output << " steps there will be a file write operation.\n";
+	    << "This equates to " << totalSteps << " steps. \n";
+	if(fileout){
+	    cout << "Every " << output << " steps there will be a file write operation.\n";
+	}
 	
 	resize_cells(particle,celllist);
-
 	assign_particle_properties(in);
+	resize_cells(particle,celllist);
+
 
 	//Close the input files
 	in.close();
-	make_verlet();
 
 	kinetic_sum=total_kinetic_energy();
 	linear_momentum_sum = total_linear_momentum();
@@ -144,8 +164,8 @@ int main(int argc, char* argv[])//Main program
 
 	
 	//Particle Properties, goes to run1.out
-	for(unsigned int j = 0; j < particles; j++){
-		dump_grain_to_file(out1,j,particle[j]);
+	if(fileout){
+		dump_grain_to_file(out1);
 	}
 	
 	//Start time
@@ -210,10 +230,9 @@ int main(int argc, char* argv[])//Main program
 
 		//Output to File, goes to run1.out
 		if(counter%output==0){
-			//cout << float(counter/totalSteps)*100.0 << " percent complete \n";
 			display_progress(double(counter/totalSteps));
-			for(j = 0; j < particles; j++){
-			    dump_grain_to_file(out1,j,particle[j]);
+			if(fileout){
+			    dump_grain_to_file(out1);
 		    }
 		}
 		kinetic_sum=potential_sum=0.0;
@@ -223,6 +242,7 @@ int main(int argc, char* argv[])//Main program
 	
 	//Calculate the time to run the loop
 	calc_execution_time(start,end);
+	header();
 
 	//Close the output files
 	out1.close();
@@ -234,3 +254,4 @@ int main(int argc, char* argv[])//Main program
 //********************************Functions*******************************//
 //************************************************************************//
 #include "helper.hpp"
+

@@ -34,38 +34,42 @@ void assign_particle_properties(istream & in){
 	cout<< "OK\n";
 }
 
-void dump_grain_to_console(int i, disk p){
-	cout << i << ", " <<
-			p.x() <<
-			", " << p.y() <<
-			", " << p.phi() <<
-			", " << p.vx() <<
-			", " << p.vy() <<
-			", " << p.omega() <<
-			", " << p.m() <<
-			", " << p.r() <<
-			", " << p.type() <<
-			", " << p.mu() <<
-			", " << p.gamma() <<
-			", " << p.Y() <<
-			", " << p.A() << "\n";
+void dump_grain_to_console(){
+	for (unsigned int i=0; i < particle.size(); i++){
+	    cout << i << ", " <<
+			particle[i].x() <<
+			", " << particle[i].y() <<
+			", " << particle[i].phi() <<
+			", " << particle[i].vx() <<
+			", " << particle[i].vy() <<
+			", " << particle[i].omega() <<
+			", " << particle[i].m() <<
+			", " << particle[i].r() <<
+			", " << particle[i].type() <<
+			", " << particle[i].mu() <<
+			", " << particle[i].gamma() <<
+			", " << particle[i].Y() <<
+			", " << particle[i].A() << "\n";
+	}
 }
 
-void dump_grain_to_file(ostream & os, int i, disk p){
+void dump_grain_to_file(ostream & os){
+	for (unsigned int i=0; i< particle.size(); i++){
 						os << i << "\t" <<
-								p.x() <<
-								"\t" << p.y() <<
-								"\t" << p.phi() <<
-								"\t" << p.vx() <<
-								"\t" << p.vy() <<
-								"\t" << p.omega() <<
-								"\t" << p.m() <<
-								"\t" << p.r() <<
-								"\t" << p.type() <<
-								"\t" << p.mu() <<
-								"\t" << p.gamma() <<
-								"\t" << p.Y() <<
-								"\t" << p.A() << "\n";
+								particle[i].x() <<
+								"\t" << particle[i].y() <<
+								"\t" << particle[i].phi() <<
+								"\t" << particle[i].vx() <<
+								"\t" << particle[i].vy() <<
+								"\t" << particle[i].omega() <<
+								"\t" << particle[i].m() <<
+								"\t" << particle[i].r() <<
+								"\t" << particle[i].type() <<
+								"\t" << particle[i].mu() <<
+								"\t" << particle[i].gamma() <<
+								"\t" << particle[i].Y() <<
+								"\t" << particle[i].A() << "\n";
+	}
 }
 
 double density (){
@@ -211,7 +215,7 @@ bool make_verlet(){
 			celllist[ix][iy].clear();
 		}
 	}
-	for(unsigned int i = 0; i < particle.size(); i++){
+	for(unsigned int i = 0; i < particles; i++){
 		int ix = int((particle[i].x()-x_0)/dx);
 		int iy = int((particle[i].y()-y_0)/dy);
 		celllist[ix][iy].push_back(i);
@@ -221,8 +225,6 @@ bool make_verlet(){
 		verlet[i].clear();
 		int ix = int((particle[i].x()-x_0)/dx);
 		int iy = int((particle[i].y()-y_0)/dy);
-		if (ix < 0 || iy < 0){
-		}
 		for(int iix = ix - 1; iix <= ix + 1; iix++){
 			for(int iiy = iy - 1; iiy <= iy + 1; iiy++){
 				int wx = (iix+vnx)%vnx;
@@ -233,6 +235,7 @@ bool make_verlet(){
 						if(Distance(particle[i],particle[pk],lx,ly) < particle[i].r() + particle[pk].r() + verlet_distance){
 							if((particle[i].type()==0) || (particle[pk].type()==0)){
 								verlet[i].insert(pk);
+
 								if(oldverlet.find(pk)==oldverlet.end()){
 									if(do_touch(i,pk)){
 										ok=false;
@@ -260,9 +263,27 @@ bool verlet_needs_update(){
 	}
 	return false;
 }
+
+double calc_average_radius(){
+	double sum_radii;
+	double avg_radii;
+	for (unsigned int i=0; i < particle.size(); i++){
+		sum_radii +=particle[i].r();
+	}
+	avg_radii = ceil(sum_radii/particles);
+	return avg_radii;
+}
+
+void update_verlet_variables(){
+	verlet_distance = calc_average_radius();
+	verlet_ratio = 0.6;
+	verlet_grid = verlet_distance*1.1;
+	verlet_increase = 1.1;
+}
+
 void resize_cells(vector<disk> &particle, vector<vector<vector<int> > > &celllist){
-	cout << "Resizing the particle list and the cell lists...";
 	particle.resize(particles);
+	update_verlet_variables();
 	safe=particle;
 	Timesafe=0.0;
 	vnx = int(lx/verlet_grid);
@@ -280,8 +301,7 @@ void resize_cells(vector<disk> &particle, vector<vector<vector<int> > > &celllis
 	for(int i = 0; i < vnx; i++){
 		celllist[i].resize(vny);
 	}
-	//make_verlet();
-	cout << "OK\n";
+	make_verlet();
 }
 
 void display_progress(double progress){
@@ -300,6 +320,30 @@ void display_progress(double progress){
 	}
 }
 
+void header(){
+	int barWidth = 80;
+	for (int i=0; i<5; i++){
+			for (int j=0; j< barWidth; j++){
+				cout << "#";
+			}
+			cout << "\n";
+	}
+}
 
+string get_date(void){
+   time_t now;
+   int MAX_DATE = 20;
+   char the_date[MAX_DATE];
 
+   the_date[0] = '\0';
+
+   now = time(NULL);
+
+   if (now != -1)
+   {
+      strftime(the_date, MAX_DATE, "%d_%m_%Y_%H_%M_%S", gmtime(&now));
+   }
+
+   return string(the_date);
+}
 #endif /* HELPER_HPP_ */

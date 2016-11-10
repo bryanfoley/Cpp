@@ -5,7 +5,8 @@
 #include "disk.h"
 #include "Vector.h"
 #include "display.h"
-#include <SDL2/SDL.h>
+#include<GL/glew.h>
+#include<SDL2/SDL.h>
 #include<iostream>
 #include<fstream>
 #include<cstdlib>
@@ -110,7 +111,7 @@ bool fileout = false;
 int main(int argc, char *argv[])//Main program
 {	
 	Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT, "OpenGL");
-	display.Clear(0.0f, 0.0f, 0.0f, 1.0f);
+
 	system("clear");
 	header();
 	ofstream out1;

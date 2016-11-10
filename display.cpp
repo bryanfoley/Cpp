@@ -7,6 +7,7 @@
 
 #include "display.h"
 #include <GL/glew.h>
+#include <SDL2/SDL.h>
 #include <iostream>
 
 Display::Display(int width, int height, const std::string& title)
@@ -52,4 +53,19 @@ void Display::Clear(float r, float g, float b, float a)
 void Display::SwapBuffers()
 {
 	SDL_GL_SwapWindow(m_window);
+}
+
+bool Display::IsClosed(){
+	return m_isClosed;
+}
+
+void Display::update(){
+	SDL_GL_SwapWindow(m_window);
+
+	SDL_Event e;
+
+	while(SDL_PollEvent(&e)){
+		if(e.type == SDL_QUIT)
+			m_isClosed = true;
+	}
 }

@@ -1,7 +1,7 @@
 CC = g++
 CCFLAGS = -c -Wall
 INCS = -I../header
-OBJS = Vector.o disk.o
+OBJS = Vector.o disk.o display.o
 TESTOBJS = Vector.o
 RM = rm
 O = *.o
@@ -18,6 +18,9 @@ Vector.o:
 	
 disk.o:
 	 $(CC) $(CCFLAGS) disk.cpp $(INCS)
+	 
+display.o:
+	$(CC) $(CCFLAGS) display.cpp $(INCS)
 	 
 clean:
 	$(RM) $(O)

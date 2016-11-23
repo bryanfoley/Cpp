@@ -4,7 +4,7 @@ all:
 	for i in $(SUBDIRS); do \
 	echo "make all in $$i.."; \
 	(cd $$i; $(MAKE) all); \
-	$(CC) $(LLFLAGS) $(MAINFILE) $(OBJSDIR)$(O) $(INCSDIR) $(OUT) $(EXEC); done
+	$(CC) $(LLFLAGS) $(MAINFILE) $(OBJSDIR)$(O) $(INCSDIR) $(OUT) $(EXEC) $(LIBS); done
 
 clean:
 	for i in $(SUBDIRS); do \

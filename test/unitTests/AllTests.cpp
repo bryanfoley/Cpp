@@ -6,6 +6,7 @@
  */
 #include <gtest/gtest.h>
 #include "VectorTests.cpp"
+#include "DiskTests.cpp"
 
 int main (int argc, char **argv){
 	::testing::InitGoogleTest(&argc, argv);

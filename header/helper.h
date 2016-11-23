@@ -1,6 +1,12 @@
 #ifndef HELPER_HPP_
 #define HELPER_HPP_
 
+#include<iostream>
+
+extern Vector G;
+
+using namespace std;
+
 void assign_system_properties(istream & in){
 	cout << "Assigning the system properties...";
 	in >> particles;
@@ -122,7 +128,7 @@ double total_angular_momentum(){
 	return sum;
 }
 
-//The avergae Coordination number
+//The average Coordination number
 double avg_coordination_number(){
 	double sum=0.0;
 	double result;
@@ -215,12 +221,12 @@ bool make_verlet(){
 			celllist[ix][iy].clear();
 		}
 	}
-	for(unsigned int i = 0; i < particles; i++){
+	for(int i = 0; i < particles; i++){
 		int ix = int((particle[i].x()-x_0)/dx);
 		int iy = int((particle[i].y()-y_0)/dy);
 		celllist[ix][iy].push_back(i);
 	}
-	for(unsigned int i = 0; i < particles; i++){
+	for(int i = 0; i < particles; i++){
 		set<int> oldverlet=verlet[i];
 		verlet[i].clear();
 		int ix = int((particle[i].x()-x_0)/dx);
@@ -282,8 +288,11 @@ void update_verlet_variables(){
 }
 
 void resize_cells(vector<disk> &particle, vector<vector<vector<int> > > &celllist){
+	cout << "";
 	particle.resize(particles);
+	cout << "";
 	update_verlet_variables();
+	cout << "";
 	safe=particle;
 	Timesafe=0.0;
 	vnx = int(lx/verlet_grid);
@@ -302,6 +311,7 @@ void resize_cells(vector<disk> &particle, vector<vector<vector<int> > > &celllis
 		celllist[i].resize(vny);
 	}
 	make_verlet();
+	cout << endl;
 }
 
 void display_progress(double progress){

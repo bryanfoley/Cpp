@@ -1,19 +1,27 @@
 include makefile.inc
 
-all: freeze_thaw.o disk.o display.o 
-	$(CC) -o freezethaw freeze_thaw.o disk.o display.o -I/usr/include/GL -I/usr/include/SDL2 -D_REENTRANT -L/usr/lib/x86_64-linux-gnu -lSDL2 -L/usr/lib/x86_64-linux-gnu -lGLEW -L/usr/lib/x86_64-linux-gnu/mesa -lGL
-
-freeze_thaw.o: freeze_thaw.cpp disk.h display.h
-	$(CC) -c freeze_thaw.cpp
-
-disk.o: disk.cpp disk.h
-	$(CC) -c disk.cpp
-	
-display.o: display.cpp display.h
-	$(CC) -c display.cpp
+all:
+	for i in $(SUBDIRS); do \
+	echo "make all in $$i.."; \
+	(cd $$i; $(MAKE) all); \
+	$(CC) $(LLFLAGS) $(MAINFILE) $(OBJSDIR)$(O) $(INCSDIR) $(OUT) $(EXEC) $(LIBS); done
 
 clean:
-	rm -f freezethaw *.o *~
+	for i in $(SUBDIRS); do \
+	echo "clean all in $$i.."; \
+	(cd $$i; $(MAKE) clean); done
+	$(RM) $(EXEC)
 	
+moreclean:
+	for i in $(TESTSUBDIRS); do \
+	echo "clean all in $$i.."; \
+	(cd $$i; $(MAKE) clean); done
+	$(RM) $(EXEC)
+
 run: all
-	./freezethaw
+	./$(EXEC)
+	
+runtests:
+	for i in $(TESTSUBDIRS); do \
+	echo "make all in $$i.."; \
+	(cd $$i; $(MAKE) tests); done

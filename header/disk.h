@@ -5,7 +5,6 @@
 #include "Vector.h"
 using namespace std;
 
-extern Vector G;
 
 inline double normalise(double dx, double L){
 			while(dx< -L/2){
@@ -38,66 +37,66 @@ class disk{
 
 	public:
 		//Constructor
-		disk():rtd0(null),rtd1(null),rtd2(null),rtd3(null),rtd4(null){}
+		disk();
 
 		//Access private members
 		//Position vector
-		Vector & pos() {return rtd0;}	//Access a dynamic vector
-		Vector pos() const {return rtd0;}	//Access a static vector
+		Vector & pos();	//Access a dynamic vector
+		Vector pos() const;	//Access a static vector
 		//x-position
-		double & x() {return rtd0.x();}
-		double x() const {return rtd0.x();}
+		double & x();
+		double x() const;
 		//y-position
-		double & y() {return rtd0.y();}
-		double y() const {return rtd0.y();}
+		double & y();
+		double y() const;
 		//Angle
-		double & phi() {return rtd0.phi();}
-		double phi() const {return rtd0.phi();}
+		double & phi();
+		double phi() const;
 		
 		//Velocity vector
-		const Vector & velocity() const {return rtd1;}
+		const Vector & velocity() const;
 		//x-velocity
-		double & vx() {return rtd1.x();}
-		double vx() const {return rtd1.x();}
+		double & vx();
+		double vx() const;
 		//y-velocity
-		double & vy() {return rtd1.y();}
-		double vy() const {return rtd1.y();}
+		double & vy();
+		double vy() const;
 		//Angular velocity
-		double & omega() {return rtd1.phi();}
-		double omega() const {return rtd1.phi();}
+		double & omega();
+		double omega() const;
 
 		//Particle properties
 		//Moment of Inertia
-		double & J() {return _J;}
-		double J() const {return _J;}
+		double & J();
+		double J() const;
 		//Radius
-		double & r() {return _r;}
-		double r() const {return _r;}
+		double & r();
+		double r() const;
 		//Mass
-		double & m() {return _m;}
-		double m() const {return _m;}
+		double & m();
+		double m() const;
 		//Particle type
-		int & type() {return _type;}
-		int type() const {return _type;}
+		int & type();
+		int type() const;
 		//Material Properties
-		double & mu() {return _mu;}
-		double & gamma() {return _gamma;}
-		double & Y() {return _Y;}
-		double & A() {return _A;}
+		double & mu();
+		double & gamma();
+		double & Y();
+		double & A();
 		//Coordination number
-		int & z() {return _z;}
-		int z() const {return _z;}
+		int & z();
+		int z() const;
 
 		//Functions that operate on the _force vector of a particle
-		void set_force_to_zero() {_force=null;}
-		void add_force(const Vector & f) {_force+=f;}
+		void set_force_to_zero();
+		void add_force(const Vector & f);
 		void predict(double dt);
 		void correct(double dt);
 		void boundary_conditions(int n, double dt, double t);
 
 		//Other functions
-		void inc_coordination_number() {_z++;}
-		void reset_coordination_number() {_z=0;}
+		void inc_coordination_number();
+		void reset_coordination_number();
 		double kinetic_energy() const;
 		double linear_momentum() const;
 		double angular_momentum() const;

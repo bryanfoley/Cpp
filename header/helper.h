@@ -2,8 +2,8 @@
 #define HELPER_HPP_
 
 #include<iostream>
+#include"disk.h"
 
-extern Vector G;
 
 using namespace std;
 

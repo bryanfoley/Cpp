@@ -5,6 +5,8 @@
 #include "Vector.h"
 using namespace std;
 
+extern Vector G;							//The Gravity vector
+
 
 inline double normalise(double dx, double L){
 			while(dx< -L/2){

@@ -1,7 +1,7 @@
 #include "disk.h"
 #include <stdlib.h>
 
-extern Vector G;
+Vector G;
 
 //Constructor
 disk::disk(){

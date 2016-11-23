@@ -74,7 +74,6 @@ time_t start, end;					//Timer variables
 double diff;						//The difference in time
 int counter = 0;					//Print out counter
 
-Vector G;							//The Gravity vector
 vector<disk> particle;				//The vector that holds all particle objects
 double Z = 0.0;						//The System Coordination number
 double potential_sum = 0.0;			//The sum of the system potential energy

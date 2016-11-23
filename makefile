@@ -12,8 +12,16 @@ clean:
 	(cd $$i; $(MAKE) clean); done
 	$(RM) $(EXEC)
 	
+moreclean:
+	for i in $(TESTSUBDIRS); do \
+	echo "clean all in $$i.."; \
+	(cd $$i; $(MAKE) clean); done
+	$(RM) $(EXEC)
+
 run: all
 	./$(EXEC)
 	
-tests: $(TESTEXEC)
-	echo 'This is where the tests run'
+runtests:
+	for i in $(TESTSUBDIRS); do \
+	echo "make all in $$i.."; \
+	(cd $$i; $(MAKE) tests); done

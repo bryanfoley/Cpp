@@ -1,10 +1,4 @@
-/*
- * VectorTests.cpp
- *
- *  Created on: Nov 18, 2016
- *      Author: bryan
- */
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "Vector.h"
 
 class VectorTest : public ::testing::Test{

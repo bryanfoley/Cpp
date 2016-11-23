@@ -12,11 +12,10 @@ O = *.o
 H = *.h
 OUT = -o
 
-TESTDIRS = test/unitTests
+TESTSUBDIRS = source test/unitTests
 
 MAINFILE = freeze_thaw.cpp
 EXEC = freezethaw
-TESTEXEC = testall
 CCFLAGS = -c -Wall
 EXECFLAGS = -o -Wall $(EXEC)
 LLFLAGS = -Wall

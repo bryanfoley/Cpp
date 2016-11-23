@@ -2,7 +2,7 @@
 #define _disk_h
 #include<iostream>
 #include<fstream>
-#include "Vector.h"
+#include "Vector.cpp"
 using namespace std;
 
 extern Vector G;

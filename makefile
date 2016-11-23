@@ -1,10 +1,13 @@
 include makefile.inc
 
-all: freeze_thaw.cpp disk.cpp
-	$(CC) -o freezethaw freeze_thaw.cpp disk.cpp
+all: freeze_thaw.cpp $(OBJS)
+	$(CC) -o freezethaw freeze_thaw.cpp $(OBJS)
+
+.cpp.o:
+	$(CC) -c $< -o $@ $(INCS)
 
 clean:
-	rm -f *.o
+	rm *.o,$(EXEC)
 	
 run: all
-	./freezethaw
+	./$(EXEC)

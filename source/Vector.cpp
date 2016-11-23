@@ -1,5 +1,5 @@
-#ifndef _Vector_h
-#define _Vector_h
+#ifndef _Vector_cpp
+#define _Vector_cpp
 
 #include<iostream>
 #include<math.h>

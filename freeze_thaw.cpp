@@ -133,7 +133,6 @@ int main(int argc, char *argv[])//Main program
 		cerr << "Cannot access the input file!\n";
 		return 1;
 	}
-	int j;								//Counters for loops
 
 	assign_system_properties(in);
 
@@ -251,5 +250,5 @@ int main(int argc, char *argv[])//Main program
 //************************************************************************//
 //********************************Functions*******************************//
 //************************************************************************//
-#include "helper.hpp"
+#include "helper.h"
 

@@ -1,10 +1,27 @@
 include makefile.inc
 
-all: freeze_thaw.cpp disk.cpp
-	$(CC) -o freezethaw freeze_thaw.cpp disk.cpp
+all:
+	for i in $(SUBDIRS); do \
+	echo "make all in $$i.."; \
+	(cd $$i; $(MAKE) all); \
+	$(CC) $(LLFLAGS) $(MAINFILE) $(OBJSDIR)$(O) $(INCSDIR) $(OUT) $(EXEC); done
 
 clean:
-	rm -f *.o
+	for i in $(SUBDIRS); do \
+	echo "clean all in $$i.."; \
+	(cd $$i; $(MAKE) clean); done
+	$(RM) $(EXEC)
 	
+moreclean:
+	for i in $(TESTSUBDIRS); do \
+	echo "clean all in $$i.."; \
+	(cd $$i; $(MAKE) clean); done
+	$(RM) $(EXEC)
+
 run: all
-	./freezethaw
+	./$(EXEC)
+	
+runtests:
+	for i in $(TESTSUBDIRS); do \
+	echo "make all in $$i.."; \
+	(cd $$i; $(MAKE) tests); done

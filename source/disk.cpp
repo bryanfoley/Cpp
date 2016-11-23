@@ -1,5 +1,76 @@
-#include "disk.hpp"
+#include "disk.h"
 #include <stdlib.h>
+
+extern Vector G;
+
+//Constructor
+disk::disk(){
+	_r = 0.0;	//Radius
+	_m = 0.0;	//Mass
+	_J = 0.0;	//Moment of Inertia
+	_z = 0;		//Coordination Number
+	_type = 0;	//Type of particle
+	_mu = 0.0;	//Material properties
+	_gamma = 0.0;
+	_Y = 0.0;
+	_A = 0.0;
+}
+
+//Access private members
+//Position vector
+Vector & disk::pos() {return rtd0;}	//Access a dynamic vector
+Vector disk::pos() const {return rtd0;}	//Access a static vector
+//x-position
+double & disk::x() {return rtd0.x();}
+double disk::x() const {return rtd0.x();}
+//y-position
+double & disk::y() {return rtd0.y();}
+double disk::y() const {return rtd0.y();}
+//Angle
+double & disk::phi() {return rtd0.phi();}
+double disk::phi() const {return rtd0.phi();}
+
+//Velocity vector
+const Vector & disk::velocity() const {return rtd1;}
+//x-velocity
+double & disk::vx() {return rtd1.x();}
+double disk::vx() const {return rtd1.x();}
+//y-velocity
+double & disk::vy() {return rtd1.y();}
+double disk::vy() const {return rtd1.y();}
+//Angular velocity
+double & disk::omega() {return rtd1.phi();}
+double disk::omega() const {return rtd1.phi();}
+
+//Particle properties
+//Moment of Inertia
+double & disk::J() {return _J;}
+double disk::J() const {return _J;}
+//Radius
+double & disk::r() {return _r;}
+double disk::r() const {return _r;}
+//Mass
+double & disk::m() {return _m;}
+double disk::m() const {return _m;}
+//Particle type
+int & disk::type() {return _type;}
+int disk::type() const {return _type;}
+//Material Properties
+double & disk::mu() {return _mu;}
+double & disk::gamma() {return _gamma;}
+double & disk::Y() {return _Y;}
+double & disk::A() {return _A;}
+//Coordination number
+int & disk::z() {return _z;}
+int disk::z() const {return _z;}
+
+//Functions that operate on the _force vector of a particle
+void disk::set_force_to_zero() {_force=0.0;}
+void disk::add_force(const Vector & f) {_force+=f;}
+
+//Other functions
+void disk::inc_coordination_number() {_z++;}
+void disk::reset_coordination_number() {_z=0;}
 
 //Gears Integration Scheme - Predict
 void disk::predict(double dt){
@@ -14,6 +85,7 @@ void disk::predict(double dt){
 			rtd3 += a1*rtd4;
 		}
 
+//Gears Integration Scheme - Correct
 void disk::correct(double dt){
 			static Vector accel, corr;
 
@@ -35,6 +107,7 @@ void disk::correct(double dt){
 			rtd4 += coeff4*corr;
 		}
 
+//Apply boundary conditions based on Particle type
 void disk::boundary_conditions(int n, double dt, double t)
 {
   switch(type()){

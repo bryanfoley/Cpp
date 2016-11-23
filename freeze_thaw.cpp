@@ -3,7 +3,7 @@
 //*******************************Inclusions*******************************//
 //************************************************************************//
 #include "disk.h"
-#include "Vector.cpp"
+#include "Vector.h"
 #include<iostream>
 #include<fstream>
 #include<cstdlib>
@@ -133,7 +133,6 @@ int main(int argc, char *argv[])//Main program
 		cerr << "Cannot access the input file!\n";
 		return 1;
 	}
-	int j;								//Counters for loops
 
 	assign_system_properties(in);
 

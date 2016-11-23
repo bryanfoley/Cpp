@@ -21,4 +21,4 @@ VectorTests.o:
 	$(CC) $(CCFLAGS) VectorTests.cpp $(INCSDIR)
 
 clean:
-	$(RM) $(O)
+	$(RM) $(O) $(TESTEXEC)

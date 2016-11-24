@@ -21,7 +21,7 @@ moreclean:
 run: all
 	./$(EXEC)
 	
-runtests:
+runtests: clean
 	for i in $(TESTSUBDIRS); do \
 	echo "make all in $$i.."; \
 	(cd $$i; $(MAKE) tests); done

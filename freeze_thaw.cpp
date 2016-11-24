@@ -110,9 +110,13 @@ bool fileout = false;
 
 int main(int argc, char *argv[])//Main program
 {	
+	system("clear");
+
 	Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT, "OpenGL");
 
-	system("clear");
+	display.Clear(0.0f,0.15f,0.3f,1.0f);
+	display.update();
+
 	header();
 	ofstream out1;
 	if (argc > 1){
@@ -235,6 +239,7 @@ int main(int argc, char *argv[])//Main program
 		//Output to File, goes to run1.out
 		if(counter%output==0){
 			display_progress(double(counter/totalSteps));
+			display.update();
 			if(fileout){
 			    dump_grain_to_file(out1);
 		    }

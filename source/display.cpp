@@ -31,7 +31,7 @@ Display::Display(int width, int height, const std::string& title)
 		std::cerr << "Glew failed to initialize!" << std::endl;
     }
 
-    m_isClosed = false;c
+    m_isClosed = false;
 
 
 	glEnable(GL_DEPTH_TEST);

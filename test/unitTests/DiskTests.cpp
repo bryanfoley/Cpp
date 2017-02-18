@@ -16,7 +16,7 @@ TEST_F(DiskTest,DiskImplicitOK){
 }
 
 TEST_F(DiskTest,DiskExplicitOK){
-	d0.pos() = 1.0,1.0,1.0;
+	d0.pos() = 1.0;
 	ASSERT_EQ(d0.x(),1.0);
 	ASSERT_EQ(d0.y(),1.0);
 	ASSERT_EQ(d0.phi(),1.0);

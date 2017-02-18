@@ -1,4 +1,4 @@
-CC = g++
+CC = g++ -std=c++11
 CCFLAGS = -c -Wall
 INCS = -I../header
 OBJS = Vector.o disk.o display.o

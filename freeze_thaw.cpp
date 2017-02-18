@@ -70,7 +70,7 @@ int particles;						//The number of particles in the system
 int tag;							//Used to select the force law
 int output;							//Used to dump the phase properties
 double dt,tmax, totalSteps;			//The timestep,max time and total steps in the simulation
-time_t start, end;					//Timer variables
+time_t startTime, endTime;					//Timer variables
 double diff;						//The difference in time
 int counter = 0;					//Print out counter
 
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])//Main program
 	}
 	
 	//Start time
-	time(&start);
+	time(&startTime);
 	//Print it to screen
 	cout << "The Main loop has started:\n";
 	for(double t = 0; t <= tmax; t+=dt){
@@ -241,10 +241,10 @@ int main(int argc, char *argv[])//Main program
 		kinetic_sum=potential_sum=0.0;
 	}
 	//End Time
-	time(&end);
+	time(&endTime);
 	
 	//Calculate the time to run the loop
-	calc_execution_time(start,end);
+	calc_execution_time(startTime,endTime);
 	header();
 
 	//Close the output files

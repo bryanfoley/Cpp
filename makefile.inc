@@ -1,5 +1,5 @@
 # Common definitions are placed in here
-CC = g++
+CC = g++ -std=c++11
 LD = g++
 RM = rm
 SHELL = /bin/sh

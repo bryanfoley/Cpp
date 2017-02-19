@@ -19,42 +19,30 @@ disk::disk(){
 //Access private members
 //Position vector
 Vector & disk::pos() {return rtd0;}	//Access a dynamic vector
-Vector disk::pos() const {return rtd0;}	//Access a static vector
 //x-position
 double & disk::x() {return rtd0.x();}
-double disk::x() const {return rtd0.x();}
 //y-position
 double & disk::y() {return rtd0.y();}
-double disk::y() const {return rtd0.y();}
 //Angle
 double & disk::phi() {return rtd0.phi();}
-double disk::phi() const {return rtd0.phi();}
-
 //Velocity vector
-const Vector & disk::velocity() const {return rtd1;}
+Vector & disk::velocity() {return rtd1;}
 //x-velocity
 double & disk::vx() {return rtd1.x();}
-double disk::vx() const {return rtd1.x();}
 //y-velocity
 double & disk::vy() {return rtd1.y();}
-double disk::vy() const {return rtd1.y();}
 //Angular velocity
 double & disk::omega() {return rtd1.phi();}
-double disk::omega() const {return rtd1.phi();}
 
 //Particle properties
 //Moment of Inertia
 double & disk::J() {return _J;}
-double disk::J() const {return _J;}
 //Radius
 double & disk::r() {return _r;}
-double disk::r() const {return _r;}
 //Mass
 double & disk::m() {return _m;}
-double disk::m() const {return _m;}
 //Particle type
 int & disk::type() {return _type;}
-int disk::type() const {return _type;}
 //Material Properties
 double & disk::mu() {return _mu;}
 double & disk::gamma() {return _gamma;}
@@ -62,7 +50,6 @@ double & disk::Y() {return _Y;}
 double & disk::A() {return _A;}
 //Coordination number
 int & disk::z() {return _z;}
-int disk::z() const {return _z;}
 
 //Functions that operate on the _force vector of a particle
 void disk::set_force_to_zero() {_force=0.0;}

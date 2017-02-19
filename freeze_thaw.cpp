@@ -97,9 +97,9 @@ double verlet_increase;
 double dx,dy;
 int vnx,vny;
 double lx = 2.0;
-double ly = 2.0;
+double ly = 3.0;
 double x_0 = 0.0;
-double y_0 = 0.0;
+double y_0 = -1.5;
 double Timesafe;
 bool fileout = false;
 
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])//Main program
 
 	//Open files for input
 	ifstream in;//File reader object, change this to run any tests
-	in.open("Input/grv_test.in",ios::in);
+	in.open("Input/hopper.in",ios::in);
 
 	if(!out1){//If the file is not accessible
 		cerr << "Cannot open the first file to be written to!\n";

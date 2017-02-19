@@ -44,42 +44,31 @@ class disk{
 		//Access private members
 		//Position vector
 		Vector & pos();	//Access a dynamic vector
-		Vector pos() const;	//Access a static vector
 		//x-position
 		double & x();
-		double x() const;
 		//y-position
 		double & y();
-		double y() const;
 		//Angle
 		double & phi();
-		double phi() const;
 		
 		//Velocity vector
-		const Vector & velocity() const;
+		Vector & velocity();
 		//x-velocity
 		double & vx();
-		double vx() const;
 		//y-velocity
 		double & vy();
-		double vy() const;
 		//Angular velocity
 		double & omega();
-		double omega() const;
 
 		//Particle properties
 		//Moment of Inertia
 		double & J();
-		double J() const;
 		//Radius
 		double & r();
-		double r() const;
 		//Mass
 		double & m();
-		double m() const;
 		//Particle type
 		int & type();
-		int type() const;
 		//Material Properties
 		double & mu();
 		double & gamma();
@@ -87,7 +76,6 @@ class disk{
 		double & A();
 		//Coordination number
 		int & z();
-		int z() const;
 
 		//Functions that operate on the _force vector of a particle
 		void set_force_to_zero();
